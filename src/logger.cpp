@@ -14,33 +14,29 @@ using namespace std;
 
 
 Logger::Logger(){
-    levelType=INFO;
-    line=-1;
-    formatType=TEXT;
-    location="unknown";
-    formatter=FormatFactory::createFormatter(TEXT);
+    
 }
 
-Logger& Logger::getInstance(){
+Logger& Logger::getInstance(){//singleton
     static Logger instance;
     return instance;
 }
 
 void Logger::setLevel(Level l){
-    levelType=l;
+    data.levelType=l;
 }
 
 void Logger::setLine(int l){
-    line=l;
+    data.line=l;
 }
 
 void Logger::setLocation(const std::string& lo){
-    location=lo;
+    data.location=lo;
 }
 
 void Logger::setFormat(Format f){
-    formatType=f;
-    formatter=FormatFactory::createFormatter(f);
+    data.formatType=f;
+    data.formatter=FormatFactory::createFormatter(f);
 }
 
 std::string Logger::getLogFileName(Level l){
@@ -73,12 +69,13 @@ void Logger::copyResToLogFile(const std::string& res, Level l){
 }
 
 void Logger::log(const std::string& message){
-    std::string encoded = formatter->format(message, levelType, line, location);
-    copyResToLogFile(encoded, levelType);
+    std::string encoded = data.formatter->format(message, data);
+    copyResToLogFile(encoded, data.levelType);
 }
 
-int main(){
 
+
+int main(){
     std::ifstream testFile("test.txt");//read mode
     std::stringstream buff;
     std::string content;
@@ -118,7 +115,7 @@ int main(){
 
 
 
-    
+
     // regular use
     // logger log1(content, INFO, TEXT);
     // logger log2(content, WARN, JSON);

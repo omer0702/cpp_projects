@@ -123,3 +123,42 @@
     ]
 }"
 }
+[location: logger.c, line 2]
+{
+  "timestamp": "06/08/2025 16:01:05",
+  "level": "WARN",
+  "message": "{
+    "name":"omer",
+    "age":
+    [
+        "years":"19",
+        "months":"4"
+    ]
+}"
+}
+[location: logger.c, line 2]
+{
+  "timestamp": "06/08/2025 16:18:22",
+  "level": "WARN",
+  "message": "{
+    "name":"omer",
+    "age":
+    [
+        "years":"19",
+        "months":"4"
+    ]
+}"
+}
+[location: logger.c, line 2]
+{
+  "timestamp": "06/08/2025 16:27:12",
+  "level": "WARN",
+  "message": "{
+    "name":"omer",
+    "age":
+    [
+        "years":"19",
+        "months":"4"
+    ]
+}"
+}
