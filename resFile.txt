@@ -1,0 +1,7 @@
+[location: logger.c, line 2]
+{
+  "timestamp": "05/08/2025 16:29:31",
+  "level": "WARN",
+  "message": "{
+                                                                                                                           "
+}

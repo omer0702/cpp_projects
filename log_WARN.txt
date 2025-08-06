@@ -1,0 +1,12 @@
+{
+ "timestamp": "02/08/2025 20:23:38",
+ "level": "WARN",
+ "message": "hello world!\nhi omer.\ngood?"
+}
+[location: logger.c, line 2]
+{
+  "timestamp": "05/08/2025 16:29:31",
+  "level": "WARN",
+  "message": "{
+                                                                                                                           "
+}

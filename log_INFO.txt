@@ -1,0 +1,29 @@
+[line: 1] {
+ "timestamp": "04/08/2025 10:54:22",
+ "level": "INFO",
+ "message": "\{\""user\"":\""omer\"", \""action\"":\""login\"",\""status\"":\""success\""\}"
+}
+[line: 1] 
+{
+ "timestamp": "04/08/2025 12:55:31",
+ "level": "INFO",
+ "message": "\{\""user\"":\""omer\"", \""action\"":\""login\"",\""status\"":\""success\""\}"
+}
+[line: 1] 
+{
+ "timestamp": "04/08/2025 13:45:33",
+ "level": "INFO",
+ "message": "\{\""name\"":\""omer\"",\""info\"":\{\""action\"":\""login\"",\""status\"":\""success\""\}\}"
+}
+[at , line: 1] 
+{
+ "timestamp": "04/08/2025 14:35:18",
+ "level": "INFO",
+ "message": "{\""name\"":\""omer\"",\""info\"":{\""action\"":\""login\"",\""status\"":\""success\""\}\}"
+}
+[location: , line 1] 
+{
+ "timestamp": "05/08/2025 10:18:52",
+ "level": "INFO",
+ "message": "{\""name\"":\""omer\"",\""info\"":{\""action\"":\""login\"",\""status\"":\""success\""\}\}"
+}
