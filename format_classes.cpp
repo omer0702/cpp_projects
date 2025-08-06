@@ -24,31 +24,31 @@ std::string TextFormat::format(const std::string& message, Level l, int line, co
     return encoded.str();
 }
 
-std::string JsonFormat::fixTavs(const std::string& message) {
-    std::string res;
+// std::string JsonFormat::fixTavs(const std::string& message) {
+//     std::string res;
 
-    for (char c : message) {
-        switch (c) {
-            case '\"':
-                res += "\\\"";
-                break;
-            case '\n':
-                res += "\\n";
-                break;
-            case '\t':
-                res += "\\t";
-                break;
-            case '\\':
-                res += "\\\\";
-                break;
+//     for (char c : message) {
+//         switch (c) {
+//             case '\"':
+//                 res += "\\\"";
+//                 break;
+//             case '\n':
+//                 res += "\\n";
+//                 break;
+//             case '\t':
+//                 res += "\\t";
+//                 break;
+//             case '\\':
+//                 res += "\\\\";
+//                 break;
 
-            default:
-                res += c;
-        }
-    }
+//             default:
+//                 res += c;
+//         }
+//     }
 
-    return res;
-}
+//     return res;
+// }
 
 std::string JsonFormat::format(const std::string& message, Level l, int line, const std::string& location) {
     std::stringstream encoded;
@@ -61,8 +61,8 @@ std::string JsonFormat::format(const std::string& message, Level l, int line, co
     encoded << "  \"timestamp\": \"" << getTime() << "\",\n";
     encoded << "  \"level\": \"" << getLevel(l) << "\",\n";
 
-    std::string arranged = fixTavs(message);
-    std::string nested = Arrange(arranged);
+    //std::string arranged = fixTavs(message);
+    std::string nested = Arrange(message);
     encoded << "  \"message\": \"" << nested << "\"\n";
     encoded << "}";
 
@@ -75,36 +75,36 @@ std::string JsonFormat::Arrange(const std::string& message) {
 
     for(char c:message){
         if(c=='{'){
-            space+=2;
+            space+=4;
             res+=c;
             res+='\n';
-            res.append(c,' ');
+            res.append(space,' ');
         }
         else if(c=='['){
             res+='\n';
-            res.append(c,' ');
-            space+=2;
+            res.append(space,' ');
+            space+=4;
             res+=c;
             res+='\n';
-            res.append(c,' ');
+            res.append(space,' ');
         }
         else if(c=='}' || c==']'){
             res+='\n';
-            space-=2;
-            res.append(c,' ');
+            space-=4;
+            res.append(space,' ');
             res+=c;
         }
         else if(c==','){
             res+=c;
             res+='\n';
-            res.append(c,' ');
+            res.append(space,' ');
         }
         else{
             res+=c;
         }
-
-        return res;
     }
+
+    return res;
 }
 
 
@@ -119,9 +119,3 @@ std::unique_ptr<Formatter> FormatFactory::createFormatter(Format f) {
     
     return std::make_unique<TextFormat>();
 }
-
-
-
-class JsonWrapper{
-
-};
