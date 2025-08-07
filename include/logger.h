@@ -8,12 +8,8 @@
 #include <fstream>
 
 
-
-
 class Logger {
 private:
-    LoggerData data;
-
     Logger();
 
     void copyResToLogFile(const std::string& res, Level l);
@@ -22,13 +18,13 @@ private:
 public:
     static Logger& getInstance();
 
-    void setLevel(Level l);
-    void setFormat(Format f);
-    void setLine(int line);
-    void setLocation(const std::string& lo);
-    void setLoggerData(LoggerData ld);
+    // void setLevel(Level l);
+    // void setFormat(Format f);
+    // void setLine(int line);
+    // void setLocation(const std::string& lo);
+    // void setLoggerData(LoggerData ld);
 
-    void log(const std::string& message);
+    void log(const std::string& message, const LoggerData& data);
 };
 
 #endif
