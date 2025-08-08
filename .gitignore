@@ -1,9 +1,9 @@
 /build/
 
-CMakeLists.txt
-
 log_*.txt
 
 test.txt
 
 resFile.txt
+
+/logger
