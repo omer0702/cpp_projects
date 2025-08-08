@@ -1,3 +1,0 @@
-/home/omer/Desktop/cpp_projects/logger/build/CMakeFiles/logger_run.dir
-/home/omer/Desktop/cpp_projects/logger/build/CMakeFiles/edit_cache.dir
-/home/omer/Desktop/cpp_projects/logger/build/CMakeFiles/rebuild_cache.dir

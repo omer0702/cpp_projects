@@ -1,0 +1,9 @@
+/build/
+
+log_*.txt
+
+test.txt
+
+resFile.txt
+
+/logger

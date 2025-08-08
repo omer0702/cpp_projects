@@ -6,60 +6,33 @@
 #include "utils.h"
 
 
-
-
-std::string TextFormat::format(const std::string& message, Level l, int line, const std::string& location) {
+std::string TextFormat::format(const std::string& message, LoggerData ldata) {
     std::stringstream encoded;
 
-    if (line >= 0)
-    {
-        encoded << "[location: " << location << ", line " << line << "]\n";
+    if (ldata.line >= 0){
+        encoded << "[location: " << ldata.location << ", line " << ldata.line << "]\n";
     }
     encoded << "[" << getTime() << "] ";
-    encoded << "[" << getLevel(l) << "] ";
+    encoded << "[" << getLevel(ldata.levelType) << "] ";
 
-    for (char byte : message)
+    for (char byte : message){
         encoded << (int)byte << " ";
+    }
 
     return encoded.str();
 }
 
-// std::string JsonFormat::fixTavs(const std::string& message) {
-//     std::string res;
 
-//     for (char c : message) {
-//         switch (c) {
-//             case '\"':
-//                 res += "\\\"";
-//                 break;
-//             case '\n':
-//                 res += "\\n";
-//                 break;
-//             case '\t':
-//                 res += "\\t";
-//                 break;
-//             case '\\':
-//                 res += "\\\\";
-//                 break;
-
-//             default:
-//                 res += c;
-//         }
-//     }
-
-//     return res;
-// }
-
-std::string JsonFormat::format(const std::string& message, Level l, int line, const std::string& location) {
+std::string JsonFormat::format(const std::string& message, LoggerData ldata) {
     std::stringstream encoded;
 
-    if (line >= 0)
+    if (ldata.line >= 0)
     {
-        encoded << "[location: " << location << ", line " << line << "]\n";
+        encoded << "[location: " << ldata.location << ", line " << ldata.line << "]\n";
     }
     encoded << "{\n";
     encoded << "  \"timestamp\": \"" << getTime() << "\",\n";
-    encoded << "  \"level\": \"" << getLevel(l) << "\",\n";
+    encoded << "  \"level\": \"" << getLevel(ldata.levelType) << "\",\n";
 
     //std::string arranged = fixTavs(message);
     std::string nested = Arrange(message);
@@ -114,7 +87,6 @@ std::unique_ptr<Formatter> FormatFactory::createFormatter(Format f) {
     }
     else if (f==JSON){
         return std::make_unique<JsonFormat>();
-
     }
     
     return std::make_unique<TextFormat>();

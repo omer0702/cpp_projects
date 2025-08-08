@@ -1,1 +1,0 @@
-/usr/bin/c++ -rdynamic CMakeFiles/logger_run.dir/logger.cpp.o -o logger_run 
