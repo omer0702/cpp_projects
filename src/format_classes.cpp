@@ -6,7 +6,7 @@
 #include "utils.h"
 
 
-std::string TextFormat::format(const std::string& message, const LoggerData& ldata) {
+std::string TextFormat::format(const std::string& message, LoggerData ldata) {
     std::stringstream encoded;
 
     if (ldata.line >= 0){
@@ -22,33 +22,8 @@ std::string TextFormat::format(const std::string& message, const LoggerData& lda
     return encoded.str();
 }
 
-// std::string JsonFormat::fixTavs(const std::string& message) {
-//     std::string res;
 
-//     for (char c : message) {
-//         switch (c) {
-//             case '\"':
-//                 res += "\\\"";
-//                 break;
-//             case '\n':
-//                 res += "\\n";
-//                 break;
-//             case '\t':
-//                 res += "\\t";
-//                 break;
-//             case '\\':
-//                 res += "\\\\";
-//                 break;
-
-//             default:
-//                 res += c;
-//         }
-//     }
-
-//     return res;
-// }
-
-std::string JsonFormat::format(const std::string& message, const LoggerData& ldata) {
+std::string JsonFormat::format(const std::string& message, LoggerData ldata) {
     std::stringstream encoded;
 
     if (ldata.line >= 0)

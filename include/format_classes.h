@@ -9,19 +9,19 @@
 
 class Formatter {
 public:
-    virtual std::string format(const std::string& message, const LoggerData& ldata)=0;
+    virtual std::string format(const std::string& message, LoggerData ldata)=0;
     virtual ~Formatter() {}
 };
 
 
 class TextFormat : public Formatter {
 public:
-    std::string format(const std::string& message, const LoggerData& ldata) override;
+    std::string format(const std::string& message, LoggerData ldata) override;
 };
 
 class JsonFormat : public Formatter {
 public:
-    std::string format(const std::string& message,const LoggerData& ldata) override;
+    std::string format(const std::string& message, LoggerData ldata) override;
 
 private:
     std::string fixTavs(const std::string& message);

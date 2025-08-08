@@ -10,21 +10,16 @@
 
 class Logger {
 private:
+    std::unique_ptr<Formatter> formatter;
+
     Logger();
 
     void copyResToLogFile(const std::string& res, Level l);
-    std::string getLogFileName(Level l);
 
 public:
     static Logger& getInstance();
 
-    // void setLevel(Level l);
-    // void setFormat(Format f);
-    // void setLine(int line);
-    // void setLocation(const std::string& lo);
-    // void setLoggerData(LoggerData ld);
-
-    void log(const std::string& message, const LoggerData& data);
+    void log(const std::string& message, Level l, Format f);
 };
 
 #endif

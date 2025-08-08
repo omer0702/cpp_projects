@@ -15,15 +15,14 @@ enum Format {
     JSON = 1
 };
 
-class Formatter;
-class FormatFactory;
 
 struct LoggerData {
     Level levelType;
     Format formatType;
     int line;
     std::string location;
-    std::unique_ptr<Formatter> formatter;
 
     LoggerData();
+
+    LoggerData(Level level, Format format);
 };
