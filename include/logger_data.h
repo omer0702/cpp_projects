@@ -16,13 +16,14 @@ enum Format {
 };
 
 
+
 struct LoggerData {
     Level levelType;
     Format formatType;
     int line;
     std::string location;
 
-    LoggerData();
+    LoggerData()=delete;
 
     LoggerData(Level level, Format format);
 };
