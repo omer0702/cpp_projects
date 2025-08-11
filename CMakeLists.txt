@@ -14,4 +14,5 @@ add_executable(logger_run
     src/logger_data.cpp
     src/file_channel.cpp
     src/socket_channel.cpp
+    src/channel.cpp
 )

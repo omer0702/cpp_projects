@@ -17,13 +17,10 @@ private:
 
     Logger();
 
-    //void copyResToLogFile(const std::string& res, Level l);
-
 public:
     static Logger& getInstance();
 
     void log(const std::string& message, Level l, Format f);
-    void log2(const std::string& message, Level l, Format f);
 
     void addChannel(std::unique_ptr<Channel> channel);
 

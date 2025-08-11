@@ -9,32 +9,31 @@
 
 #define IP "127.0.0.1"
 #define PORT 4321
+#define OUTPUTFILE "resLogFile.txt"
 
 int main(){
     std::string message = "{\"name\":\"omer\",\"age\":[\"years\":\"19\",\"months\":\"4\"]}";
     SocketChannel obj;
     std::thread listenerThread(&SocketChannel::listenerServer, &obj);
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));//give server time to complete his connection
 
     Logger& logger = Logger::getInstance();
-    // logger.log(message, INFO, JSON);
-
-    //logger.log("miss ;",ERROR, TEXT);
 
 
-    auto fileChannel=std::make_unique<FileChannel>("resLogFile.txt");
+    std::unique_ptr<FileChannel> fileChannel=std::make_unique<FileChannel>(OUTPUTFILE);
     if(fileChannel->open()){
         logger.addChannel(std::move(fileChannel));
     }
 
 
-    auto sockChannel=std::make_unique<SocketChannel>(IP, PORT);
+    std::unique_ptr<SocketChannel> sockChannel=std::make_unique<SocketChannel>(IP, PORT);
     if(sockChannel->open()){
         logger.addChannel(std::move(sockChannel));
     }
 
-    logger.log2(message, INFO, JSON);
+    logger.log(message, INFO, JSON);
 
-    listenerThread.join();
+    listenerThread.join();//for wait the thread to end
 
     return 0;
 }

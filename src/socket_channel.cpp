@@ -23,7 +23,6 @@ SocketChannel::~SocketChannel(){
 }
 
 bool SocketChannel::open(){
-    //std::lock_guard<std::mutex> lock(mtx);
     sockaddr_in server_addr{};
 
     sock_fd=socket(AF_INET, SOCK_STREAM, 0);
@@ -34,6 +33,7 @@ bool SocketChannel::open(){
 
     server_addr.sin_family=AF_INET;
     server_addr.sin_port=htons(port);
+    server_addr.sin_addr.s_addr=inet_addr(host.c_str());
 
     if(connect(sock_fd, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0){
         std::cerr<<"connect failed:"<<strerror(errno)<<std::endl;
@@ -76,19 +76,24 @@ void SocketChannel::listenerServer(){
     address.sin_port=htons(4321);
     address.sin_addr.s_addr=inet_addr("127.0.0.1");
 
-    bind(server_fd, (struct sockaddr*)&address, sizeof(address));
-    listen(server_fd, 3);
+    if(bind(server_fd, (struct sockaddr*)&address, sizeof(address))<0){
+        std::cout<<"bind failed"<<std::endl;
+        return;
+    }
+    if(listen(server_fd, 3)<0){
+        std::cout<<"listen failed"<<std::endl;
+        return;  
+    }
+    
     std::cout<<"listening on port: 4321"<<std::endl;
     if((client_fd=accept(server_fd, nullptr, nullptr)) < 0){
         std::cout<<"accept failed"<<std::endl;
         std::cerr<<"accept failed:"<<strerror(errno)<<std::endl;
     }
 
-    std::cout<<"after accept"<<std::endl;
-
     while((bytes_read=read(client_fd, buff, SIZE-1)) > 0){
         buff[bytes_read]='\0';
-        std::cout<<"received: "<<buff<<std::endl;
+        std::cout<<"received: \n"<<buff<<std::endl;
     }
 
     ::close(server_fd);

@@ -5,7 +5,7 @@
 
 class SocketChannel: public Channel{
 private:
-    std::string host;//check if need
+    std::string host;
     short port;
     int sock_fd;
     std::mutex mtx;

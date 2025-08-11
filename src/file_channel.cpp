@@ -29,9 +29,11 @@ void FileChannel::close(){
     }
 }
 
+
 bool FileChannel::write(const std::string& res){
     std::lock_guard<std::mutex> lock(mtx);
     if(!resFile.is_open()){
+        std::cout<<"res file is closed, cant write"<<std::endl;
         return false;
     }
     resFile<<res<<std::endl;
