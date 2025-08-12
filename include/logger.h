@@ -24,6 +24,7 @@ public:
 
     void addChannel(std::unique_ptr<Channel> channel);
 
+    void closeAllChannels();
 };
 
 #endif

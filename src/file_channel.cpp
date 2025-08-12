@@ -15,13 +15,47 @@ FileChannel::~FileChannel(){
     close();
 }
 
+void FileChannel::consumerThreadFunc(){
+    while(running){
+        std::unique_lock<std::mutex> lock(mtx);
+
+        while(messagesQueue.empty() && running){
+            cv.wait(lock);
+        }
+
+        while(!messagesQueue.empty()){
+            std::string msg=messagesQueue.front();
+            messagesQueue.pop();
+
+            if(resFile.is_open()){
+                resFile<<msg<<"\n";
+            }
+        }
+    }
+}
+
+
 bool FileChannel::open(){
     std::lock_guard<std::mutex> lock(mtx);
+
     resFile.open(fileName, std::ios::app);
-    return resFile.is_open();
+    if(!resFile.is_open()){
+        return false;
+    }
+    running=true;
+    consumerThread=std::thread(&FileChannel::consumerThreadFunc, this);
+
+    return true;
 }
 
 void FileChannel::close(){
+    running=false;
+
+    cv.notify_all();
+    if(consumerThread.joinable()){
+        consumerThread.join();
+    }
+    
     std::lock_guard<std::mutex> lock(mtx);
 
     if(resFile.is_open()){
@@ -30,13 +64,8 @@ void FileChannel::close(){
 }
 
 
-bool FileChannel::write(const std::string& res){
+void FileChannel::write(const std::string& res){
     std::lock_guard<std::mutex> lock(mtx);
-    if(!resFile.is_open()){
-        std::cout<<"res file is closed, cant write"<<std::endl;
-        return false;
-    }
-    resFile<<res<<std::endl;
-
-    return true;
+    messagesQueue.push(res);
+    cv.notify_one();
 }

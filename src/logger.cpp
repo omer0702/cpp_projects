@@ -29,6 +29,14 @@ void Logger::addChannel(std::unique_ptr<Channel> ch){
 }
 
 
+void Logger::closeAllChannels(){
+    for(auto& ch:channels){
+        ch->close();
+    }
+    channels.clear();//clear all channels, means release all pointers, and then call all destructors
+}
+
+
 void Logger::log(const std::string& message, Level l, Format f){
     formatter = FormatFactory::createFormatter(f);
     std::string encoded = formatter->format(message, LoggerData(l, f));

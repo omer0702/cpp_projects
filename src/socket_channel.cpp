@@ -9,17 +9,43 @@
 
 #define SIZE 1024
 
+#define ENDTAV "\nEND\n"
 
-SocketChannel::SocketChannel(const std::string& h, short p):host(h), port(p), sock_fd(-1){
-
+SocketChannel::SocketChannel(const std::string &h, short p) : host(h), port(p), sock_fd(-1){
 }
 
 SocketChannel::SocketChannel(){
-
 }
 
 SocketChannel::~SocketChannel(){
     close();
+}
+
+
+void SocketChannel::consumerThreadFunc(){
+    long bytes_send;
+
+    while(true){
+        std::unique_lock<std::mutex> lock(mtxQueue);//to prevent from two threads to change the queue in the same time
+        while(messagesQueue.empty() && running){//consumer wait when the queue is empty, and awake when there the producer add msg
+            cv.wait(lock);//for not waste cpu time
+        }
+
+        if(!running || messagesQueue.empty()){
+            break;
+        }
+        
+        std::string msg=std::move(messagesQueue.front());
+        messagesQueue.pop();
+        lock.unlock();//after we have the msg, unlock the queue for not block producers
+
+        std::lock_guard<std::mutex> sockLock(mtx);//lock the socket in sned time to prevent parallel sending
+        if(sock_fd!=-1){
+            if((bytes_send=send(sock_fd, msg.c_str(), msg.size(), 0)) < 0){
+                std::cerr<<"send failed: "<<strerror(errno)<<std::endl;
+            }
+        }
+    }
 }
 
 bool SocketChannel::open(){
@@ -41,27 +67,37 @@ bool SocketChannel::open(){
         return false;
     }
 
+    running=true;
+    consumerThread=std::thread(&SocketChannel::consumerThreadFunc, this);//thread that takes messages from the queue and send to the socket
+
     return true;
 }
 
 
 void SocketChannel::close(){
-    std::lock_guard<std::mutex> lock(mtx);//lock_guard is a wrapper class to mutex
+    running=false;//stop the consumer
+    cv.notify_all();//awake the consumer if he waits in empty condition
+
+    std::unique_lock<std::mutex> lock(mtx);
     if(sock_fd != -1){
-        ::close(sock_fd);//the :: means to call global close()
+        ::close(sock_fd);
+        sock_fd= -1;
+    }
+    lock.unlock();//unlock before join, because the consumer thread can be blocked in send() and the join will still wait for him
+
+    if(consumerThread.joinable()){//make sure that the consumer thread end before we continue
+        consumerThread.join();
     }
 }
 
-bool SocketChannel::write(const std::string& res){
-    int bytes_send;
-    std::lock_guard<std::mutex> lock(mtx);
-
-    if(sock_fd == -1){
-        return false;
+void SocketChannel::write(const std::string& res){//the producer
+    if(!running){
+        return;
     }
-    bytes_send=send(sock_fd, res.c_str(), res.size(), 0);//c_str() convert to char*
 
-    return bytes_send==res.size();//return if all bytes sent
+    std::lock_guard<std::mutex> lock(mtxQueue);
+    messagesQueue.push(res+ENDTAV);
+    cv.notify_one();//awake the consumer thread if he sleeps and wait to new messages
 }
 
 
@@ -91,9 +127,17 @@ void SocketChannel::listenerServer(){
         std::cerr<<"accept failed:"<<strerror(errno)<<std::endl;
     }
 
+    std::string buffer;
     while((bytes_read=read(client_fd, buff, SIZE-1)) > 0){
         buff[bytes_read]='\0';
-        std::cout<<"received: \n"<<buff<<std::endl;
+        buffer+=buff;
+
+        long pos;
+        while((pos=buffer.find(ENDTAV))!=std::string::npos){//for print the whole message
+            std::string message=buffer.substr(0,pos);
+            buffer.erase(0, pos+strlen(ENDTAV));
+            std::cout<<"received: \n"<<message<<std::endl;
+        }
     }
 
     ::close(server_fd);
