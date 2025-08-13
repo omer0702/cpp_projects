@@ -14,14 +14,14 @@
 
 
 void logFromThread(int id){
-    for(int i=0;i<2;i++){
+    for(int i = 0;i <2 ; i++){
         Logger::getInstance().log("Thread"+std::to_string(id)+" - message: "+std::to_string(i), INFO ,TEXT);
         std::this_thread::sleep_for(std::chrono::milliseconds(5));
     }
 }
 
 void logFromThread2(int id){
-    for(int i=0;i<2;i++){
+    for(int i = 0;i <2 ; i++){
         Logger::getInstance().log("Thread"+std::to_string(id)+" - message: "+std::to_string(i), INFO ,TEXT);
         std::this_thread::sleep_for(std::chrono::milliseconds(5));
     }
@@ -35,10 +35,10 @@ int main(){
     //     logger.addChannel(std::move(fileChannel));
     // }
 
-    // int count=500;
+    // int count = 500;
     // std::vector<std::thread> threads;
 
-    // for(int i=0;i<count;i++){
+    // for(int i = 0;i < count; i++){
     //     threads.emplace_back(logFromThread, i);
     // }
 
@@ -57,15 +57,15 @@ int main(){
     //std::thread serverThread(&SocketChannel::listenerServer, &serverChannel);
     //std::this_thread::sleep_for(std::chrono::milliseconds(200));
 
-    auto clientChannel=std::make_unique<SocketChannel>(IP, PORT);
+    auto clientChannel = std::make_unique<SocketChannel>(IP, PORT);
     if(clientChannel->open()){
         logger.addChannel(std::move(clientChannel));
     }
 
-    int num_of_threads=1000;
+    int num_of_threads = 1000;
     std::vector<std::thread> threads2;
 
-    for(int i=0;i<num_of_threads;i++){
+    for(int i = 0;i < num_of_threads; i++){
         threads2.emplace_back(logFromThread2, i);
     }
 

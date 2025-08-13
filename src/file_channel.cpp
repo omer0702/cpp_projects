@@ -24,7 +24,7 @@ void FileChannel::consumerThreadFunc(){
         }
 
         while(!messagesQueue.empty()){
-            std::string msg=messagesQueue.front();
+            std::string msg = messagesQueue.front();
             messagesQueue.pop();
 
             if(resFile.is_open()){
@@ -42,14 +42,14 @@ bool FileChannel::open(){
     if(!resFile.is_open()){
         return false;
     }
-    running=true;
-    consumerThread=std::thread(&FileChannel::consumerThreadFunc, this);
+    running = true;
+    consumerThread = std::thread(&FileChannel::consumerThreadFunc, this);
 
     return true;
 }
 
 void FileChannel::close(){
-    running=false;
+    running = false;
 
     cv.notify_all();
     if(consumerThread.joinable()){
