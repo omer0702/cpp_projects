@@ -11,12 +11,12 @@ private:
     std::string host;
     short port;
     int sock_fd;
-    std::mutex mtx;//lock the access to socket
+    std::mutex mtx;
 
     std::atomic<bool> running{false};
     std::queue<std::string> messagesQueue;
     std::thread consumerThread;
-    std::mutex mtxQueue;//lock the access to messagesQueue
+    std::mutex mtxQueue;
     std::condition_variable cv;
 
 

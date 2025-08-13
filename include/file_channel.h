@@ -13,7 +13,7 @@ private:
     std::string fileName;
     std::mutex mtx;
 
-    std::atomic<bool> running{false};//atomic because its a var that use by several threads(consumer/main)
+    std::atomic<bool> running{false};
     std::queue<std::string> messagesQueue;
     std::thread consumerThread;
     std::condition_variable cv;
